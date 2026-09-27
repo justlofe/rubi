@@ -12,7 +12,7 @@ base {
 }
 
 loom {
-	accessWidenerPath = file("src/main/resources/rubi.accesswidener")
+	accessWidenerPath = file("src/main/resources/amber.accesswidener")
 }
 
 dependencies {
@@ -42,7 +42,7 @@ java {
 
 jar {
 	def projectName = project.name
-	inputs.property "projectName", projectName
+	inputs.property("projectName", projectName)
 
 	from("LICENSE") {
 		rename { "${it}_$projectName"}

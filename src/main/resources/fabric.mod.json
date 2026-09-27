@@ -1,6 +1,6 @@
 {
     "schemaVersion": 1,
-    "id": "rubi",
+    "id": "amber",
     "version": "${version}",
     "name": "Rubi",
     "description": "Enables the display of rubi/ruby annotations in Minecraft.",
@@ -10,10 +10,10 @@
     },
     "authors": ["keve1227", "justlofe"],
     "license": "GPL3",
-    "icon": "assets/rubi/icon.png",
+    "icon": "assets/amber/icon.png",
     "environment": "client",
-    "mixins": ["rubi.mixins.json"],
-    "accessWidener": "rubi.accesswidener",
+    "mixins": ["amber.mixins.json"],
+    "accessWidener": "amber.accesswidener",
     "depends": {
         "fabricloader": "~${fabricloader}",
         "minecraft": "${minecraft}",
