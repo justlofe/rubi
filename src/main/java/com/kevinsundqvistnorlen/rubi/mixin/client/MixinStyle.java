@@ -2,8 +2,7 @@ package com.kevinsundqvistnorlen.rubi.mixin.client;
 
 import com.kevinsundqvistnorlen.rubi.IRubyStyle;
 import com.kevinsundqvistnorlen.rubi.RubyText;
-import net.minecraft.text.*;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -16,24 +15,26 @@ import java.util.Objects;
 
 @Mixin(Style.class)
 public abstract class MixinStyle implements IRubyStyle {
-    @Final @Shadow TextColor color;
-    @Final @Shadow Boolean bold;
-    @Final @Shadow Boolean italic;
-    @Final @Shadow Boolean underlined;
-    @Final @Shadow Boolean strikethrough;
-    @Final @Shadow Boolean obfuscated;
-    @Final @Shadow ClickEvent clickEvent;
-    @Final @Shadow HoverEvent hoverEvent;
-    @Final @Shadow String insertion;
-    @Final @Shadow Identifier font;
+
+    @Final @Shadow private TextColor color;
+    @Final @Shadow private Boolean bold;
+    @Final @Shadow private Boolean italic;
+    @Final @Shadow private Boolean underlined;
+    @Final @Shadow private Boolean strikethrough;
+    @Final @Shadow private Boolean obfuscated;
+    @Final @Shadow private ClickEvent clickEvent;
+    @Final @Shadow private HoverEvent hoverEvent;
+    @Final @Shadow private String insertion;
+    @Final @Shadow private FontDescription font;
 
     @Unique private @Nullable RubyText ruby;
 
     @Invoker("<init>")
     private static @NotNull Style invokeConstructor(
-        @Nullable TextColor color, @Nullable Boolean bold, @Nullable Boolean italic, @Nullable Boolean underlined,
-        @Nullable Boolean strikethrough, @Nullable Boolean obfuscated, @Nullable ClickEvent clickEvent,
-        @Nullable HoverEvent hoverEvent, @Nullable String insertion, @Nullable Identifier font
+        @Nullable TextColor color, final @Nullable  Integer shadowColor, @Nullable Boolean bold,
+        @Nullable Boolean italic, @Nullable Boolean underlined, @Nullable Boolean strikethrough,
+        @Nullable Boolean obfuscated, @Nullable ClickEvent clickEvent, @Nullable HoverEvent hoverEvent,
+        @Nullable String insertion, @Nullable FontDescription font
     ) {
         return Style.EMPTY;
     }
@@ -41,11 +42,15 @@ public abstract class MixinStyle implements IRubyStyle {
     @Shadow
     public abstract boolean equals(Object o);
 
+    @Shadow @Final private @org.jspecify.annotations.Nullable Integer shadowColor;
+
     @Override
     public Style rubi$withRuby(RubyText rubyText) {
         var result = MixinStyle.invokeConstructor(
-            this.color, this.bold, this.italic, this.underlined, this.strikethrough, this.obfuscated, this.clickEvent,
-            this.hoverEvent, this.insertion, this.font
+            this.color, this.shadowColor, this.bold,
+            this.italic, this.underlined, this.strikethrough,
+            this.obfuscated, this.clickEvent, this.hoverEvent,
+            this.insertion, this.font
         );
         //noinspection DataFlowIssue
         ((MixinStyle) (Object) result).setRuby(rubyText);
@@ -62,11 +67,11 @@ public abstract class MixinStyle implements IRubyStyle {
         this.ruby = ruby;
     }
 
-    @Inject(method = "withParent", at = @At("RETURN"))
-    private void onWithParent(Style parent, CallbackInfoReturnable<Style> cir) {
-        if (cir.getReturnValue() == parent) return;
-        if (IRubyStyle.getRuby(parent).isEmpty()) return;
-        ((MixinStyle) (Object) cir.getReturnValue()).setRuby(((IRubyStyle) parent).rubi$getRuby());
+    @Inject(method = "applyTo", at = @At("RETURN"))
+    private void onWithParent(Style other, CallbackInfoReturnable<Style> cir) {
+        if (cir.getReturnValue() == other) return;
+        if (IRubyStyle.getRuby(other).isEmpty()) return;
+        ((MixinStyle) (Object) cir.getReturnValue()).setRuby(((IRubyStyle) (Object) other).rubi$getRuby());
     }
 
     @Inject(method = "equals", at = @At("RETURN"), cancellable = true)

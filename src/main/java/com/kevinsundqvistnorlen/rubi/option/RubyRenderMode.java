@@ -2,13 +2,14 @@ package com.kevinsundqvistnorlen.rubi.option;
 
 import com.kevinsundqvistnorlen.rubi.Utils;
 import com.mojang.serialization.Codec;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.util.TranslatableOption;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.Options;
+import net.minecraft.network.chat.Component;
 
 import java.util.Arrays;
 
-public enum RubyRenderMode implements TranslatableOption {
+public enum RubyRenderMode {
+
     HIDDEN("hidden"),
     ABOVE("above"),
     BELOW("below"),
@@ -20,37 +21,37 @@ public enum RubyRenderMode implements TranslatableOption {
         this.translationKey = Option.TRANSLATION_KEY + "." + name;
     }
 
-    public static void accept(GameOptions.Visitor visitor) {
-        visitor.accept("rubi.renderMode", Option.INSTANCE);
+    public static void accept(Options.OptionAccess access) {
+        access.process("rubi.renderMode", Option.INSTANCE);
     }
 
-    public static SimpleOption<RubyRenderMode> getOption() {
+    public static OptionInstance<RubyRenderMode> getOption() {
         return Option.INSTANCE;
     }
 
-    public static RubyRenderMode byId(int id) {
+    private static RubyRenderMode byId(int id) {
         return RubyRenderMode.values()[id];
     }
 
-    @Override
-    public int getId() {
+    private int getId() {
         return this.ordinal();
     }
 
-    @Override
-    public String getTranslationKey() {
-        return this.translationKey;
-    }
-
     private static final class Option {
+
         static final String TRANSLATION_KEY = "options.rubi.renderMode";
-        static final SimpleOption<RubyRenderMode> INSTANCE = new SimpleOption<>(
-            TRANSLATION_KEY, SimpleOption.emptyTooltip(), SimpleOption.enumValueText(),
-            new SimpleOption.PotentialValuesBasedCallbacks<>(
+
+        static final OptionInstance<RubyRenderMode> INSTANCE = new OptionInstance<>(
+            TRANSLATION_KEY,
+            OptionInstance.noTooltip(),
+            (_, value) -> Component.translatable(value.translationKey),
+            new OptionInstance.Enum<>(
                 Arrays.asList(RubyRenderMode.values()),
                 Codec.INT.xmap(RubyRenderMode::byId, RubyRenderMode::getId)
-            ), RubyRenderMode.ABOVE,
-            (value) -> Utils.LOGGER.debug("Ruby display mode changed to {} ({})", value.toString(), value.ordinal())
+            ),
+            RubyRenderMode.ABOVE,
+            (value) -> Utils.LOGGER.debug("Ruby display mode changed to {} ({})", value, value.ordinal())
         );
+
     }
 }

@@ -1,4 +1,4 @@
-accessWidener v2 named
+accessWidener v2 official
 
 # GameOptions
-accessible class net/minecraft/client/option/GameOptions$Visitor
+accessible class net/minecraft/client/option/Options$OptionAccess

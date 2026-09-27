@@ -1,8 +1,8 @@
 package com.kevinsundqvistnorlen.rubi.mixin.client;
 
 import com.kevinsundqvistnorlen.rubi.option.RubyRenderMode;
-import net.minecraft.client.gui.screen.option.AccessibilityOptionsScreen;
-import net.minecraft.client.option.SimpleOption;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.screens.options.AccessibilityOptionsScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -12,10 +12,11 @@ import java.util.Arrays;
 
 @Mixin(AccessibilityOptionsScreen.class)
 public class MixinAccessibilityOptionsScreen {
-    @Inject(method = "getOptions", at = @At("RETURN"), cancellable = true)
-    private static void onGetOptions(CallbackInfoReturnable<SimpleOption<?>[]> info) {
-        SimpleOption<?>[] options = info.getReturnValue();
-        SimpleOption<?>[] newOptions = Arrays.copyOf(options, options.length + 1);
+
+    @Inject(method = "options", at = @At("RETURN"), cancellable = true)
+    private static void onGetOptions(CallbackInfoReturnable<OptionInstance<?>[]> info) {
+        OptionInstance<?>[] options = info.getReturnValue();
+        OptionInstance<?>[] newOptions = Arrays.copyOf(options, options.length + 1);
         newOptions[options.length] = RubyRenderMode.getOption();
         info.setReturnValue(newOptions);
     }

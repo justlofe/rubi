@@ -1,15 +1,18 @@
 package com.kevinsundqvistnorlen.rubi;
 
 import com.kevinsundqvistnorlen.rubi.option.RubyRenderMode;
-import net.minecraft.client.font.TextHandler;
-import net.minecraft.text.*;
+import net.minecraft.client.StringSplitter;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.StringDecomposer;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public record RubyText(OrderedText text, OrderedText ruby) {
+public record RubyText(FormattedCharSequence text, FormattedCharSequence ruby) {
+
     public static final Pattern RUBY_PATTERN = Pattern.compile("§\\^\\s*(.+?)\\s*\\(\\s*(.+?)\\s*\\)");
 
     private static final float RUBY_SCALE = 0.5f;
@@ -21,7 +24,7 @@ public record RubyText(OrderedText text, OrderedText ruby) {
 
         var matcher = RUBY_PATTERN.matcher(returnValue);
         while (matcher.find()) {
-            if (RubyRenderMode.getOption().getValue() == RubyRenderMode.REPLACE) {
+            if (RubyRenderMode.getOption().get() == RubyRenderMode.REPLACE) {
                 matcher.appendReplacement(sb, matcher.group(2));
             } else {
                 matcher.appendReplacement(sb, matcher.group(1));
@@ -33,21 +36,21 @@ public record RubyText(OrderedText text, OrderedText ruby) {
     }
 
     public static @NotNull RubyText fromFormatted(String word, String ruby, Style style) {
-        var formattedWord = OrderedText.of(v -> TextVisitFactory.visitFormatted(word, 0, style, style, v));
-        var formattedRuby = OrderedText.of(v -> TextVisitFactory.visitFormatted(ruby, 0, style, style, v));
-        formattedRuby = Utils.transformStyle(formattedRuby, s -> s.withUnderline(false).withStrikethrough(false));
+        var formattedWord = FormattedCharSequence.composite(v -> StringDecomposer.iterateFormatted(word, 0, style, style, v));
+        var formattedRuby = FormattedCharSequence.composite(v -> StringDecomposer.iterateFormatted(ruby, 0, style, style, v));
+        formattedRuby = Utils.transformStyle(formattedRuby, s -> s.withUnderlined(false).withStrikethrough(false));
         return new RubyText(formattedWord, formattedRuby);
     }
 
     float draw(
-        float x, float y, Matrix4f matrix, TextHandler textHandler, int fontHeight,
+        float x, float y, Matrix4f matrix, StringSplitter splitter, int fontHeight,
         TextDrawer textDrawer
     ) {
-        float width = this.getWidth(textHandler);
+        float width = this.getWidth(splitter);
 
-        switch (RubyRenderMode.getOption().getValue()) {
-            case ABOVE -> this.drawAbove(x, y, width, matrix, textHandler, fontHeight, textDrawer);
-            case BELOW -> this.drawBelow(x, y, width, matrix, textHandler, fontHeight, textDrawer);
+        switch (RubyRenderMode.getOption().get()) {
+            case ABOVE -> this.drawAbove(x, y, width, matrix, splitter, fontHeight, textDrawer);
+            case BELOW -> this.drawBelow(x, y, width, matrix, splitter, fontHeight, textDrawer);
             case REPLACE -> this.drawReplace(x, y, matrix, textDrawer);
             case HIDDEN -> this.drawHidden(x, y, matrix, textDrawer);
         }
@@ -55,16 +58,16 @@ public record RubyText(OrderedText text, OrderedText ruby) {
         return width;
     }
 
-    public float getWidth(TextHandler textHandler) {
-        var mode = RubyRenderMode.getOption().getValue();
+    public float getWidth(StringSplitter textHandler) {
+        var mode = RubyRenderMode.getOption().get();
         float baseWidth = 0f, rubyWidth = 0f;
 
         if (mode != RubyRenderMode.REPLACE) {
-            baseWidth += textHandler.getWidth(this.text());
+            baseWidth += textHandler.stringWidth(this.text());
         }
 
         if (mode != RubyRenderMode.HIDDEN) {
-            rubyWidth += textHandler.getWidth(this.ruby());
+            rubyWidth += textHandler.stringWidth(this.ruby());
         }
 
         return switch (mode) {
@@ -89,14 +92,14 @@ public record RubyText(OrderedText text, OrderedText ruby) {
 
     private void drawRubyPair(
         float x, float yText, float yRuby, float width, TextDrawer textDrawer,
-        TextHandler textHandler, Matrix4f matrix
+        StringSplitter textHandler, Matrix4f matrix
     ) {
         textDrawer.drawSpacedApart(this.text(), x, yText, RubyText.TEXT_SCALE, width, matrix, textHandler);
         textDrawer.drawSpacedApart(this.ruby(), x, yRuby, RubyText.RUBY_SCALE, width, matrix, textHandler);
     }
 
     private void drawAbove(
-        float x, float y, float width, Matrix4f matrix, TextHandler textHandler, int fontHeight,
+        float x, float y, float width, Matrix4f matrix, StringSplitter textHandler, int fontHeight,
         TextDrawer textDrawer
     ) {
         float textHeight = fontHeight * RubyText.TEXT_SCALE;
@@ -109,7 +112,7 @@ public record RubyText(OrderedText text, OrderedText ruby) {
     }
 
     private void drawBelow(
-        float x, float y, float width, Matrix4f matrix, TextHandler textHandler, int fontHeight,
+        float x, float y, float width, Matrix4f matrix, StringSplitter textHandler, int fontHeight,
         TextDrawer textDrawer
     ) {
         float textHeight = fontHeight * RubyText.TEXT_SCALE;

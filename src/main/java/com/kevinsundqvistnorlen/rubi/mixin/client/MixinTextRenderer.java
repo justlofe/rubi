@@ -1,10 +1,9 @@
 package com.kevinsundqvistnorlen.rubi.mixin.client;
 
 import com.kevinsundqvistnorlen.rubi.TextDrawer;
-import net.minecraft.client.font.TextHandler;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.text.*;
+import net.minecraft.client.StringSplitter;
+import net.minecraft.client.gui.Font;
+import net.minecraft.util.FormattedCharSequence;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.*;
@@ -13,17 +12,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(TextRenderer.class)
+@Mixin(Font.class)
 public abstract class MixinTextRenderer {
     @Unique private final ThreadLocal<Boolean> recursionGuard = ThreadLocal.withInitial(() -> false);
 
-    @Final @Shadow public int fontHeight;
-    @Final @Shadow private TextHandler handler;
+    @Final @Shadow public int lineHeight;
+    @Final @Shadow private StringSplitter splitter;
 
     @Shadow
     public abstract int draw(
         OrderedText text, float x, float y, int color, boolean shadow, Matrix4f matrix,
-        VertexConsumerProvider vertexConsumers, TextRenderer.TextLayerType layerType, int backgroundColor, int light
+        VertexConsumerProvider vertexConsumers, Font.DisplayMode layerType, int backgroundColor, int light
     );
 
     @Shadow
@@ -56,8 +55,8 @@ public abstract class MixinTextRenderer {
         at = @At("HEAD"), cancellable = true, order = 900
     )
     private void onDraw(
-        OrderedText text, float x, float y, int color, boolean shadow, Matrix4f matrix,
-        VertexConsumerProvider vertexConsumers, TextRenderer.TextLayerType layerType, int backgroundColor, int light,
+        FormattedCharSequence text, float x, float y, int color, boolean shadow, Matrix4f matrix,
+        VertexConsumerProvider vertexConsumers, Font.DisplayMode layerType, int backgroundColor, int light,
         CallbackInfoReturnable<Integer> cir
     ) {
         if (this.recursionGuard.get()) return;
@@ -65,7 +64,7 @@ public abstract class MixinTextRenderer {
 
         try {
             x = TextDrawer.draw(
-                text, x, y, matrix, this.handler, this.fontHeight,
+                text, x, y, matrix, this.splitter, this.lineHeight,
                 (t, xx, yy, m) -> this.draw(
                     t, xx, yy, color, shadow, m, vertexConsumers, layerType, backgroundColor,
                     light
@@ -77,20 +76,19 @@ public abstract class MixinTextRenderer {
         }
     }
 
-    @Inject(method = "drawWithOutline", at = @At("HEAD"), cancellable = true, order = 900)
+    @Inject(method = "prepare8xTextOutline", at = @At("HEAD"), cancellable = true, order = 900)
     private void onDrawWithOutline(
-        OrderedText text, float x, float y, int color, int outlineColor, Matrix4f matrix,
-        VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci
+        FormattedCharSequence str, float x, float y, int outlineColor, CallbackInfoReturnable<Font.PreparedText> cir
     ) {
         if (this.recursionGuard.get()) return;
         this.recursionGuard.set(true);
 
         try {
             TextDrawer.draw(
-                text, x, y, matrix, this.handler, this.fontHeight,
-                (t, xx, yy, m) -> this.drawWithOutline(t, xx, yy, color, outlineColor, m, vertexConsumers, light)
+                str, x, y, matrix, this.splitter, this.lineHeight,
+                (t, xx, yy, m) -> this.drawWithOutline(t, xx, yy, outlineColor, outlineColor, m)
             );
-            ci.cancel();
+            cir.cancel();
         } finally {
             this.recursionGuard.set(false);
         }
