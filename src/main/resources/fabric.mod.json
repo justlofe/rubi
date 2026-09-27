@@ -2,7 +2,7 @@
     "schemaVersion": 1,
     "id": "amber",
     "version": "${version}",
-    "name": "Rubi",
+    "name": "Amber",
     "description": "Enables the display of rubi/ruby annotations in Minecraft.",
     "contact": {
         "sources": "https://github.com/justlofe/rubi",
