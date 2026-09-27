@@ -75,7 +75,7 @@ public abstract class MixinTextRenderer {
                     this.splitter,
                     this.lineHeight,
 
-                    (part, xx, yy, matrix) -> {
+                    (part, xx, yy, _) -> {
                         Font.PreparedText prepared =
                                 this.prepareText(
                                         part,

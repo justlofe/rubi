@@ -5,11 +5,10 @@
     "name": "Rubi",
     "description": "Enables the display of rubi/ruby annotations in Minecraft.",
     "contact": {
-        "homepage": "https://rubi.kevinsundqvistnorlen.com/",
-        "sources": "https://github.com/keve1227/rubi",
-        "issues": "https://github.com/keve1227/rubi/issues"
+        "sources": "https://github.com/justlofe/rubi",
+        "issues": "https://github.com/justlofe/rubi/issues"
     },
-    "authors": ["keve1227"],
+    "authors": ["keve1227", "justlofe"],
     "license": "GPL3",
     "icon": "assets/rubi/icon.png",
     "environment": "client",

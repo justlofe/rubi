@@ -2,7 +2,13 @@ plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
 
+version = project.mod_version + '+' + project.minecraft_version
+
 repositories {
+}
+
+base {
+	archivesName = project.archives_base_name
 }
 
 loom {
@@ -10,22 +16,18 @@ loom {
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	minecraft("com.mojang:minecraft:${project.minecraft_version}")
+	implementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	implementation fabricApi.module("fabric-resource-loader-v0", project.fabric_api_version)
+	implementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_api_version))
 }
 
 processResources {
 	def version = project.version
-	inputs.property "version", version
+	inputs.property("version", version)
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version,
-				"fabricloader": project.loader_version,
-				"minecraft": project.minecraft_range
+		expand("version": project.version, "fabricloader": project.loader_version, "minecraft": project.minecraft_range)
 	}
 }
 

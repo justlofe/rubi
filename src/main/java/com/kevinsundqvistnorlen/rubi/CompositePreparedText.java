@@ -32,18 +32,13 @@ public final class CompositePreparedText implements Font.PreparedText {
                 continue;
             }
 
-            result = result == null
-                    ? bounds
-                    : union(result, bounds);
+            result = result == null ? bounds : union(result, bounds);
         }
 
         return result;
     }
 
-    private static ScreenRectangle union(
-            ScreenRectangle a,
-            ScreenRectangle b
-    ) {
+    private static ScreenRectangle union(ScreenRectangle a, ScreenRectangle b) {
         int left = Math.min(a.left(), b.left());
         int top = Math.min(a.top(), b.top());
 
