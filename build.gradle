@@ -2,7 +2,7 @@ plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
 
-version = project.mod_version + '+' + project.minecraft_version
+version = "${project.mod_version}+${minecraft_range_from}-${minecraft_range_to}"
 
 repositories {
 }
@@ -27,7 +27,12 @@ processResources {
 	inputs.property("version", version)
 
 	filesMatching("fabric.mod.json") {
-		expand("version": project.version, "fabricloader": project.loader_version, "minecraft": project.minecraft_range)
+		expand(
+				"version": project.version,
+				"fabricloader": project.loader_version,
+				"minecraft_range_from": project.minecraft_range_from,
+				"minecraft_range_to": project.minecraft_range_to
+		)
 	}
 }
 
