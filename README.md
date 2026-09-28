@@ -1,32 +1,34 @@
-# Rubi
+# Amber
+Fork for [Rubi](https://github.com/keve1227/rubi).
 
-_Requires [Fabric Loader](https://fabricmc.net/)._
+<a href="https://modrinth.com/mod/rubi-unofficial-fork"><img alt="modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_64h.png"></a>
+<a href="https://modrinth.com/mod/fabric-api"><img alt="fabric-api" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/fabric-api_64h.png"></a>
 
-Rubi is a utility mod for Minecraft that, hopefully, will enable you to more easily learn (for example) Japanese words
+Amber is a utility mod for Minecraft that, hopefully, will enable you to more easily learn (for example) Japanese words
 through gameplay by allowing the display of [furigana/ruby annotations](https://en.wikipedia.org/wiki/Ruby_character)
-within the game itself. Additionally, I created/generated a dedicated resource pack to provide compatible ruby
-annotations for the Japanese language. While the resource pack is fairly comprehensive, please note that I haven't
-thoroughly verified every annotation (there are a _lot_ of them), so I should expect there to be some inaccuracies.
+within the game itself. Additionally, We created/generated a dedicated resource pack to provide compatible ruby
+annotations for the Japanese language. While the resource pack is fairly comprehensive, please note that we haven't
+thoroughly verified every annotation (there are a _lot_ of them), so expect there to be some inaccuracies.
 
 > **NOTE:** This mod does basically nothing without a compatible language resource pack.
 
 ## Options
 
-By default, ruby annotations are displayed <ruby>above<rt>əˈbʌv</rt></ruby> the annotated text. This can be changed in
+By default, ruby annotations are displayed above the annotated text. This can be changed in
 the game's accessibility settings. There are four options:
 
 - **Above Text** (Default): The ruby annotations are displayed above the annotated text.
 - **Below Text**: The ruby annotations are displayed below the annotated text.
 - **Replace Text**: The annotated text is replaced with the ruby annotations.
-- **Hidden**: Self explanatory.
+- **Hidden**: Self-explanatory.
 
 ## Compatible resource packs
 
-### Japanese
+|          | Language                             | Pack Author                             |
+|----------|--------------------------------------|-----------------------------------------|
+| Japanese | https://github.com/keve1227/furigana | [keve1227](https://github.com/keve1227) |
 
-- [Furigana](https://github.com/keve1227/furigana) by [keve1227](https://github.com/keve1227) (me)
-
-## For resource pack creators
+## Creating your own resource pack
 
 Assuming you already know how to create a [resource pack](https://minecraft.fandom.com/wiki/Resource_pack), you can
 include ruby annotations in the translations for your language using the format `§^<text>(<ruby>)` where `<text>` is the

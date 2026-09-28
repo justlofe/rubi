@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.state.gui.GuiRenderState;
 import net.minecraft.client.renderer.state.gui.GuiTextRenderState;
 import net.minecraft.util.FormattedCharSequence;
 import org.joml.Matrix3x2fc;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -99,7 +100,7 @@ public abstract class MixinGuiRenderer {
 
         prepared.visit(new Font.GlyphVisitor() {
             @Override
-            public void acceptRenderable(TextRenderable renderable) {
+            public void acceptRenderable(@NonNull TextRenderable renderable) {
                 renderState.addGlyphToCurrentLayer(
                         new GlyphRenderState(
                                 pose,
