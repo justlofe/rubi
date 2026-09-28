@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class OptionsMixin {
 
     @Inject(method = "processDumpedOptions", at = @At("HEAD"))
-    private void onAccept(Options.OptionAccess visitor, CallbackInfo info) {
-        RubyRenderMode.accept(visitor);
+    private void onAccept(Options.OptionAccess access, CallbackInfo info) {
+        RubyRenderMode.accept(access);
     }
 }
