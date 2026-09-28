@@ -1,8 +1,10 @@
-package com.kevinsundqvistnorlen.rubi.mixin.client;
+package fun.lofe.amber.mixin.client;
 
-import com.kevinsundqvistnorlen.rubi.TextDrawer;
+import fun.lofe.amber.TextPreparer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.TextRenderable;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.GuiRenderer;
 import net.minecraft.client.renderer.state.gui.GlyphRenderState;
 import net.minecraft.client.renderer.state.gui.GuiRenderState;
 import net.minecraft.client.renderer.state.gui.GuiTextRenderState;
@@ -17,8 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(net.minecraft.client.gui.render.GuiRenderer.class)
-public abstract class MixinGuiRenderer {
+@Mixin(GuiRenderer.class)
+public abstract class GuiRendererMixin {
 
     @Shadow
     @Final
@@ -37,7 +39,7 @@ public abstract class MixinGuiRenderer {
 
     @Unique
     private void rubi$prepareTextState(GuiTextRenderState state) {
-        MixinGuiTextRenderStateAccessor text = (MixinGuiTextRenderStateAccessor) (Object) state;
+        GuiTextRenderStateAccessor text = (GuiTextRenderStateAccessor) (Object) state;
 
         Font font = text.rubi$getFont();
         FormattedCharSequence sequence = text.rubi$getText();
@@ -53,7 +55,7 @@ public abstract class MixinGuiRenderer {
 
         Matrix3x2fc pose = state.pose;
 
-        TextDrawer.draw(
+        TextPreparer.prepare(
                 sequence,
                 x,
                 y,
@@ -76,17 +78,13 @@ public abstract class MixinGuiRenderer {
         );
     }
 
+    @Unique
     private void rubi$drawPiece(
-            Font font,
-            FormattedCharSequence text,
-            float x,
-            float y,
-            int color,
-            boolean shadow,
-            boolean includeEmpty,
-            int backgroundColor,
+            Font font, FormattedCharSequence text,
+            float x, float y,
+            int color, boolean shadow, boolean includeEmpty, int backgroundColor,
             Matrix3x2fc pose,
-            net.minecraft.client.gui.navigation.ScreenRectangle scissor
+            ScreenRectangle scissor
     ) {
         Font.PreparedText prepared = font.prepareText(
                 text,

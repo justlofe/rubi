@@ -8,7 +8,7 @@
         "sources": "https://github.com/justlofe/rubi",
         "issues": "https://github.com/justlofe/rubi/issues"
     },
-    "authors": ["keve1227", "justlofe"],
+    "authors": ["keve1227", "justlofe", "silly_51lly"],
     "license": "GPL3",
     "icon": "assets/amber/icon.png",
     "environment": "client",

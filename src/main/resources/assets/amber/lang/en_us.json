@@ -1,7 +1,7 @@
 {
-    "options.rubi.renderMode": "Rubies",
-    "options.rubi.renderMode.above": "§^Above (Above) Text",
-    "options.rubi.renderMode.below": "§^Below (Below) Text",
-    "options.rubi.renderMode.replace": "Replace Text",
-    "options.rubi.renderMode.hidden": "Hidden"
+  "options.amber.renderMode": "Rubies",
+  "options.amber.renderMode.above": "§^Above (Above) Text",
+  "options.amber.renderMode.below": "§^Below (Below) Text",
+  "options.amber.renderMode.replace": "Replace Text",
+  "options.amber.renderMode.hidden": "Hidden"
 }

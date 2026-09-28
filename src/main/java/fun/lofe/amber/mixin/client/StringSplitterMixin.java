@@ -1,6 +1,7 @@
-package com.kevinsundqvistnorlen.rubi.mixin.client;
+package fun.lofe.amber.mixin.client;
 
-import com.kevinsundqvistnorlen.rubi.IRubyStyle;
+import fun.lofe.amber.RubyText;
+import fun.lofe.amber.ruby.RubyStyle;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.StringSplitter;
@@ -16,20 +17,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StringSplitter.class)
+public abstract class StringSplitterMixin {
 
-public abstract class MixinTextHandler {
-
-    @Unique private final ThreadLocal<Boolean> recursionGuard = ThreadLocal.withInitial(() -> false);
+    @Unique
+    private final ThreadLocal<Boolean> recursionGuard = ThreadLocal.withInitial(() -> false);
 
     @Inject(method = "<init>", at = @At("CTOR_HEAD"))
     private void onTextHandlerInit(
-        StringSplitter.WidthProvider widthProvider, CallbackInfo ci,
-        @Local(argsOnly = true, name = "widthProvider") LocalRef<StringSplitter.WidthProvider> localWidthRetriever
+            StringSplitter.WidthProvider widthProvider, CallbackInfo ci,
+            @Local(argsOnly = true, name = "widthProvider") LocalRef<StringSplitter.WidthProvider> localWidthRetriever
     ) {
-        localWidthRetriever.set((codePoint, style) -> IRubyStyle
-            .getRuby(style)
-            .map(rubyText -> rubyText.getWidth((StringSplitter) (Object) this))
-            .orElseGet(() -> widthProvider.getWidth(codePoint, style)));
+        localWidthRetriever.set((codepoint, style) -> {
+            RubyText rubyText = RubyStyle.getRubyText(style);
+            if(rubyText == null) return widthProvider.getWidth(codepoint, style);
+
+            return rubyText.getWidth((StringSplitter) (Object) this);
+        });
     }
 
     @Shadow
@@ -54,13 +57,14 @@ public abstract class MixinTextHandler {
 
         try {
             var width = new MutableFloat();
-            text.accept((index, style, codePoint) -> {
-                width.add(
-                    IRubyStyle
-                        .getRuby(style)
-                        .map(ruby -> ruby.getWidth((StringSplitter) (Object) this))
-                        .orElseGet(() -> this.stringWidth(FormattedCharSequence.codepoint(codePoint, style)))
-                );
+            text.accept((_, style, codePoint) -> {
+                RubyText rubyText = RubyStyle.getRubyText(style);
+                if(rubyText == null) {
+                    width.add(this.stringWidth(FormattedCharSequence.codepoint(codePoint, style)));
+                    return true;
+                }
+
+                width.add(rubyText.getWidth((StringSplitter) (Object) this));
                 return true;
             });
             cir.setReturnValue(width.floatValue());

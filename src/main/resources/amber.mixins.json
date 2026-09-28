@@ -1,19 +1,19 @@
 {
   "required": true,
-  "package": "com.kevinsundqvistnorlen.rubi.mixin.client",
+  "package": "fun.lofe.amber.mixin.client",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "MixinAccessibilityOptionsScreen",
-    "MixinFormatting",
-    "MixinGameOptions",
-    "MixinGuiRenderer",
-    "MixinGuiTextRenderStateAccessor",
-    "MixinStringVisitable",
-    "MixinStyle",
-    "MixinTextHandler",
-    "MixinTextRenderer",
-    "MixinTextVisitFactory",
-    "MixinTextWidget"
+    "AccessibilityOptionsScreenMixin",
+    "ChatFormattingMixin",
+    "OptionsMixin",
+    "GuiRendererMixin",
+    "GuiTextRenderStateAccessor",
+    "FormattedTextMixin",
+    "StyleMixin",
+    "StringSplitterMixin",
+    "FontMixin",
+    "StringDecomposerMixin",
+    "StringWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

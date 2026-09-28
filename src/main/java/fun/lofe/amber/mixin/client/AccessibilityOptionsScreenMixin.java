@@ -1,6 +1,6 @@
-package com.kevinsundqvistnorlen.rubi.mixin.client;
+package fun.lofe.amber.mixin.client;
 
-import com.kevinsundqvistnorlen.rubi.option.RubyRenderMode;
+import fun.lofe.amber.option.RubyRenderMode;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.screens.options.AccessibilityOptionsScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,8 +11,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Arrays;
 
 @Mixin(AccessibilityOptionsScreen.class)
-public class MixinAccessibilityOptionsScreen {
+public class AccessibilityOptionsScreenMixin {
 
+    /**
+     * The goal of this injection is to add an option from our mod
+     */
     @Inject(method = "options", at = @At("RETURN"), cancellable = true)
     private static void onGetOptions(CallbackInfoReturnable<OptionInstance<?>[]> info) {
         OptionInstance<?>[] options = info.getReturnValue();
@@ -20,4 +23,5 @@ public class MixinAccessibilityOptionsScreen {
         newOptions[options.length] = RubyRenderMode.getOption();
         info.setReturnValue(newOptions);
     }
+
 }

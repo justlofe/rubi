@@ -1,7 +1,8 @@
-package com.kevinsundqvistnorlen.rubi;
+package fun.lofe.amber;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public final class CompositePreparedText implements Font.PreparedText {
     }
 
     @Override
-    public void visit(Font.GlyphVisitor visitor) {
+    public void visit(Font.@NonNull GlyphVisitor visitor) {
         for (Font.PreparedText part : parts) {
             part.visit(visitor);
         }
@@ -28,9 +29,7 @@ public final class CompositePreparedText implements Font.PreparedText {
         for (Font.PreparedText part : parts) {
             ScreenRectangle bounds = part.bounds();
 
-            if (bounds == null) {
-                continue;
-            }
+            if (bounds == null) continue;
 
             result = result == null ? bounds : union(result, bounds);
         }

@@ -1,7 +1,7 @@
-package com.kevinsundqvistnorlen.rubi.mixin.client;
+package fun.lofe.amber.mixin.client;
 
-import com.kevinsundqvistnorlen.rubi.IRubyStyle;
-import com.kevinsundqvistnorlen.rubi.RubyText;
+import fun.lofe.amber.ruby.RubyStyle;
+import fun.lofe.amber.RubyText;
 import net.minecraft.network.chat.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,8 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
+/**
+ * Overall goal of this mixin is to add {@link RubyText} field and methods for it to the {@link Style} class.
+ */
 @Mixin(Style.class)
-public abstract class MixinStyle implements IRubyStyle {
+public abstract class StyleMixin implements RubyStyle {
 
     @Final @Shadow private TextColor color;
     @Final @Shadow private Boolean bold;
@@ -46,14 +49,14 @@ public abstract class MixinStyle implements IRubyStyle {
 
     @Override
     public Style rubi$withRuby(RubyText rubyText) {
-        var result = MixinStyle.invokeConstructor(
+        var result = StyleMixin.invokeConstructor(
             this.color, this.shadowColor, this.bold,
             this.italic, this.underlined, this.strikethrough,
             this.obfuscated, this.clickEvent, this.hoverEvent,
             this.insertion, this.font
         );
-        //noinspection DataFlowIssue
-        ((MixinStyle) (Object) result).setRuby(rubyText);
+
+        ((StyleMixin) (Object) result).setRuby(rubyText);
         return result;
     }
 
@@ -70,19 +73,20 @@ public abstract class MixinStyle implements IRubyStyle {
     @Inject(method = "applyTo", at = @At("RETURN"))
     private void onWithParent(Style other, CallbackInfoReturnable<Style> cir) {
         if (cir.getReturnValue() == other) return;
-        if (IRubyStyle.getRuby(other).isEmpty()) return;
-        ((MixinStyle) (Object) cir.getReturnValue()).setRuby(((IRubyStyle) (Object) other).rubi$getRuby());
+        if (RubyStyle.getRubyText(other) == null) return;
+
+        ((StyleMixin) (Object) cir.getReturnValue()).setRuby(RubyStyle.asRubyStyle(other).rubi$getRuby());
     }
 
     @Inject(method = "equals", at = @At("RETURN"), cancellable = true)
     private void onEquals(Object o, CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue()) {
-            cir.setReturnValue(Objects.equals(this.ruby, ((IRubyStyle) o).rubi$getRuby()));
-        }
+        if (cir.getReturnValue())
+            cir.setReturnValue(Objects.equals(this.ruby, ((RubyStyle) o).rubi$getRuby()));
     }
 
     @Inject(method = "hashCode", at = @At("RETURN"), cancellable = true)
     private void onHashCode(CallbackInfoReturnable<Integer> cir) {
         cir.setReturnValue(Objects.hash(cir.getReturnValue(), this.ruby));
     }
+
 }

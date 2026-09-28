@@ -1,7 +1,7 @@
-package com.kevinsundqvistnorlen.rubi.mixin.client;
+package fun.lofe.amber.mixin.client;
 
-import com.kevinsundqvistnorlen.rubi.CompositePreparedText;
-import com.kevinsundqvistnorlen.rubi.TextDrawer;
+import fun.lofe.amber.CompositePreparedText;
+import fun.lofe.amber.TextPreparer;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.util.FormattedCharSequence;
@@ -15,11 +15,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Font.class)
-public abstract class MixinTextRenderer {
+public abstract class FontMixin {
 
     @Unique
-    private final ThreadLocal<Boolean> rubi$recursionGuard =
-            ThreadLocal.withInitial(() -> false);
+    private final ThreadLocal<Boolean> rubi$recursionGuard = ThreadLocal.withInitial(() -> false);
 
     @Final
     @Shadow
@@ -47,8 +46,7 @@ public abstract class MixinTextRenderer {
     )
     private void rubi$prepareText(
             FormattedCharSequence text,
-            float x,
-            float y,
+            float x, float y,
             int originalColor,
             boolean drawShadow,
             boolean includeEmpty,
@@ -62,12 +60,11 @@ public abstract class MixinTextRenderer {
         rubi$recursionGuard.set(true);
 
         try {
-            CompositePreparedText result =
-                    new CompositePreparedText();
+            CompositePreparedText result = new CompositePreparedText();
 
             Matrix3x2f identity = new Matrix3x2f();
 
-            TextDrawer.draw(
+            TextPreparer.prepare(
                     text,
                     x,
                     y,

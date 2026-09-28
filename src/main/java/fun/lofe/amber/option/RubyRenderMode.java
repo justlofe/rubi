@@ -1,6 +1,6 @@
-package com.kevinsundqvistnorlen.rubi.option;
+package fun.lofe.amber.option;
 
-import com.kevinsundqvistnorlen.rubi.Utils;
+import fun.lofe.amber.Amber;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
@@ -22,7 +22,7 @@ public enum RubyRenderMode {
     }
 
     public static void accept(Options.OptionAccess access) {
-        access.process("rubi.renderMode", Option.INSTANCE);
+        access.process("amber.renderMode", Option.INSTANCE);
     }
 
     public static OptionInstance<RubyRenderMode> getOption() {
@@ -39,7 +39,7 @@ public enum RubyRenderMode {
 
     private static final class Option {
 
-        static final String TRANSLATION_KEY = "options.rubi.renderMode";
+        static final String TRANSLATION_KEY = "options.amber.renderMode";
 
         static final OptionInstance<RubyRenderMode> INSTANCE = new OptionInstance<>(
             TRANSLATION_KEY,
@@ -50,7 +50,7 @@ public enum RubyRenderMode {
                 Codec.INT.xmap(RubyRenderMode::byId, RubyRenderMode::getId)
             ),
             RubyRenderMode.ABOVE,
-            (value) -> Utils.LOGGER.debug("Ruby display mode changed to {} ({})", value, value.ordinal())
+            (value) -> Amber.LOGGER.debug("Ruby display mode changed to {} ({})", value, value.ordinal())
         );
 
     }
