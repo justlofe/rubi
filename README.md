@@ -1,7 +1,7 @@
 # Amber
 Fork for [Rubi](https://github.com/keve1227/rubi).
 
-<a href="https://modrinth.com/mod/rubi-unofficial-fork"><img alt="modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_64h.png"></a>
+<a href="https://modrinth.com/mod/amber-fork"><img alt="modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_64h.png"></a>
 <a href="https://modrinth.com/mod/fabric-api"><img alt="fabric-api" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/fabric-api_64h.png"></a>
 
 Amber is a utility mod for Minecraft that, hopefully, will enable you to more easily learn (for example) Japanese words
