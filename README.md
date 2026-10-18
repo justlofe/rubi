@@ -6,9 +6,7 @@ Fork for [Rubi](https://github.com/keve1227/rubi).
 
 Amber is a utility mod for Minecraft that, hopefully, will enable you to more easily learn (for example) Japanese words
 through gameplay by allowing the display of [furigana/ruby annotations](https://en.wikipedia.org/wiki/Ruby_character)
-within the game itself. Additionally, We created/generated a dedicated resource pack to provide compatible ruby
-annotations for the Japanese language. While the resource pack is fairly comprehensive, please note that we haven't
-thoroughly verified every annotation (there are a _lot_ of them), so expect there to be some inaccuracies.
+within the game itself.
 
 > **NOTE:** This mod does basically nothing without a compatible language resource pack.
 
